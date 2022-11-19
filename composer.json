@@ -10,7 +10,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "CodencoDev\\PrintFactory\\Tests": "tests/"
+            "CodencoDev\\PrintFactory\\Tests\\": "tests/"
         }
     },
     "authors": [
@@ -25,11 +25,31 @@
     ],
     "require-dev": {
         "phpunit/phpunit": "^9.5",
-        "pestphp/pest": "^1.22"
+        "pestphp/pest": "^1.22",
+        "orchestra/testbench": "^7.13"
     },
     "config": {
         "allow-plugins": {
             "pestphp/pest-plugin": true
         }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "CodencoDev\\PrintFactory\\PrintFactoryServiceProvider"
+            ],
+            "aliases": {
+                "PrintFactory": "CodencoDev\\PrintFactory\\Facades\\PrintFactory"
+            }
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "@php vendor/bin/testbench package:discover --ansi"
+        ]
+    },
+    "require": {
+        "h4cc/wkhtmltopdf-amd64": "0.12.x",
+        "h4cc/wkhtmltoimage-amd64": "0.12.x"
     }
 }
