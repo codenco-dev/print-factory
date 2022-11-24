@@ -2,15 +2,20 @@
 
 namespace CodencoDev\PrintFactory\Tests;
 
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\File;
 use Symfony\Component\Console\Exception\RuntimeException;
 
 class MakeCommandTest extends TestCase
 {
+    protected string $uniquePrintableName = 'MyWonderfulPrintable';
+
     public function setUp(): void
     {
         parent::setUp();
-        Storage::fake();
+        $testGeneratedFilePath = base_path('app/Printables' . DIRECTORY_SEPARATOR . $this->uniquePrintableName . '.php');
+        if (File::exists($testGeneratedFilePath)) {
+            File::delete($testGeneratedFilePath);
+        }
     }
 
     public function testCommandShouldFailWithoutArgument(): void
@@ -32,12 +37,38 @@ class MakeCommandTest extends TestCase
 
     public function testCommandShouldSucceed(): void
     {
-        $this->artisan('printable:make', ['name' => 'MyPrintable'])
+        $this->artisan('printable:make', ['name' => $this->uniquePrintableName])
             ->assertSuccessful()
         ;
 
+        $filePath = base_path('app/Printables/' . $this->uniquePrintableName . '.php');
         $this->assertDirectoryExists(base_path('app/Printables'));
-        $this->assertFileExists(base_path('app/Printables/MyPrintable.php'));
+        $this->assertFileExists($filePath);
+
+        $content = File::get($filePath);
+
+        $this->assertStringContainsString("namespace CodencoDev\PrintFactory\Printables;", $content);
+        $this->assertStringContainsString("class {$this->uniquePrintableName} extends Printable implements ShouldQueue", $content);
+    }
+
+    public function testForceCommandShouldSucceed(): void
+    {
+        touch(base_path('app/Printables/' . $this->uniquePrintableName . '.php'));
+
+        $this->artisan('printable:make', [
+            'name' => $this->uniquePrintableName,
+            '--force' => true,
+        ])
+            ->assertSuccessful()
+        ;
+
+        $filePath = base_path('app/Printables/' . $this->uniquePrintableName . '.php');
+        $this->assertDirectoryExists(base_path('app/Printables'));
+        $this->assertFileExists($filePath);
+
+        $content = File::get($filePath);
+        $this->assertStringContainsString("namespace CodencoDev\PrintFactory\Printables;", $content);
+        $this->assertStringContainsString("class {$this->uniquePrintableName} extends Printable implements ShouldQueue", $content);
     }
 
     /*
@@ -50,6 +81,8 @@ class MakeCommandTest extends TestCase
     {
         return [
             'no numbers' => ['Rabbit02'],
+            'non standard chars' => ['%Chicken'],
+            'no space' => ['My Horse'],
         ];
     }
 }

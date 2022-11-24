@@ -2,7 +2,7 @@
 
 namespace CodencoDev\PrintFactory\Printables;
 
-use App\Contracts\Printable;
+use CodencoDev\PrintFactory\Contracts\Printable\Printable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;

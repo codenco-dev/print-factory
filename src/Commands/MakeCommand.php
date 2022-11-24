@@ -5,6 +5,7 @@ namespace CodencoDev\PrintFactory\Commands;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\File;
 use InvalidArgumentException;
+use RuntimeException;
 use Throwable;
 
 class MakeCommand extends Command
@@ -25,6 +26,10 @@ class MakeCommand extends Command
 
     protected string $className;
 
+    protected string $stubName = 'PrintableClass.stub';
+
+    protected string $stubDirectory;
+
     /**
      * Execute the console command.
      *
@@ -34,6 +39,11 @@ class MakeCommand extends Command
     {
         try {
             $this->className = $this->argument('name');
+
+            $this->stubDirectory = __DIR__ . DIRECTORY_SEPARATOR
+            . '..' . DIRECTORY_SEPARATOR
+            . '..' . DIRECTORY_SEPARATOR
+            . 'stubs' . DIRECTORY_SEPARATOR;
 
             $this->checkClassName();
 
@@ -63,9 +73,14 @@ class MakeCommand extends Command
         return true;
     }
 
+    protected function relativeClassPath(): string
+    {
+        return base_path('app/Printables');
+    }
+
     protected function classPath(): string
     {
-        return base_path("app/Printables/{$this->className}");
+        return base_path("app/Printables/{$this->className}.php");
     }
 
     protected function ensureDirectoryExists($path): void
@@ -83,5 +98,23 @@ class MakeCommand extends Command
         );
 
         return true;
+    }
+
+    public function classContents()
+    {
+        $stubPath = $this->stubDirectory . $this->stubName;
+
+        throw_unless(
+            File::exists($stubPath),
+            new RuntimeException("Stub file {$stubPath} does not exist.")
+        );
+
+        $template = File::get($stubPath);
+
+        return str_replace(
+            ['[class]'],
+            [$this->className],
+            $template
+        );
     }
 }

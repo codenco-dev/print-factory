@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Contracts;
+namespace CodencoDev\PrintFactory\Contracts\Printable;
 
 use Barryvdh\Snappy\Facades\SnappyPdf;
 use Barryvdh\Snappy\PdfWrapper;
