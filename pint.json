@@ -1,0 +1,23 @@
+{
+    "preset": "laravel",
+    "rules": {
+        "class_attributes_separation": {
+            "elements": {
+                "const": "none",
+                "method": "one",
+                "property": "one"
+            }
+        },
+        "method_chaining_indentation": true,
+        "multiline_whitespace_before_semicolons": {
+            "strategy": "new_line_for_chained_calls"
+        },
+        "no_extra_blank_lines": {
+            "tokens": [
+                "extra"
+            ]
+        },
+        "no_unused_imports": true,
+        "void_return": true
+    }
+}
