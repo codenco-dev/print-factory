@@ -47,7 +47,7 @@ class MakeCommandTest extends TestCase
 
         $content = File::get($filePath);
 
-        $this->assertStringContainsString("namespace CodencoDev\PrintFactory\Printables;", $content);
+        $this->assertStringContainsString("namespace App\Printables;", $content);
         $this->assertStringContainsString("class {$this->uniquePrintableName} extends Printable implements ShouldQueue", $content);
     }
 
@@ -67,7 +67,7 @@ class MakeCommandTest extends TestCase
         $this->assertFileExists($filePath);
 
         $content = File::get($filePath);
-        $this->assertStringContainsString("namespace CodencoDev\PrintFactory\Printables;", $content);
+        $this->assertStringContainsString("namespace App\Printables;", $content);
         $this->assertStringContainsString("class {$this->uniquePrintableName} extends Printable implements ShouldQueue", $content);
     }
 

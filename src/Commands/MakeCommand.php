@@ -26,6 +26,8 @@ class MakeCommand extends Command
 
     protected string $className;
 
+    protected string $namespace = 'App\Printables';
+
     protected string $stubName = 'PrintableClass.stub';
 
     protected string $stubDirectory;
@@ -112,8 +114,8 @@ class MakeCommand extends Command
         $template = File::get($stubPath);
 
         return str_replace(
-            ['[class]'],
-            [$this->className],
+            ['[class]', '[namespace]'],
+            [$this->className, $this->namespace],
             $template
         );
     }
