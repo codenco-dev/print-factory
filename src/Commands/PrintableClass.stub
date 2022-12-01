@@ -12,19 +12,16 @@ class {{class}} extends Printable implements ShouldQueue
     use Queueable;
     use SerializesModels;
 
-    protected string $view = 'pdfs.hello';
-
-    private function __construct()
+    public function __construct()
     {
-        $sampleData = [
-            'hello' => 'world',
-        ];
-        $this->setHtmlContent(view($this->view, $sampleData)->render());
-        $this->setPdfFileName("hello_world.pdf");
-    }
-
-    public static function for(...$params)
-    {
-        return new static(...$params);
+        $sampleData = <<<'EOT'
+<html>
+<body>
+        <h1>Hello Pdf World</h1>
+</body>
+</html>
+EOT;
+        $this->setHtmlContent($sampleData);
+        $this->setPdfFileName('hello_world.pdf');
     }
 }
