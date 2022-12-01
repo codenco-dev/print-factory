@@ -4,10 +4,10 @@ The goal of this package is to make easy converting one html view to a printable
 
 ## Requirements
 due to the headless chrome part that is required, we need to :
-- install dome packages.
+- install chrome packages.
 - install wkhtmltopdf
 
-wkhtmltopdf is rquiring those packages
+wkhtmltopdf is requiring those packages
 - gnupg
 - locales
 - wget
@@ -28,7 +28,7 @@ wkhtmltopdf is rquiring those packages
 ## Installation 
 
 ### Ubuntu
-alternatively you may use install script in bin folder.
+alternatively you may use install script from `bin` folder.
 
 #### installing requirements
 ```

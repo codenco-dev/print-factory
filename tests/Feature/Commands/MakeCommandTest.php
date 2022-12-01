@@ -3,22 +3,21 @@
 namespace CodencoDev\PrintFactory\Tests;
 
 use Illuminate\Support\Facades\File;
+use InvalidArgumentException;
 use Symfony\Component\Console\Exception\RuntimeException;
 
 class MakeCommandTest extends TestCase
 {
-    protected string $uniquePrintableName = 'MyWonderfulPrintable';
-
     public function setUp(): void
     {
         parent::setUp();
-        $testGeneratedFilePath = base_path('app/Printables' . DIRECTORY_SEPARATOR . $this->uniquePrintableName . '.php');
+        $testGeneratedFilePath = $this->printableClassesPath('Foo.php');
         if (File::exists($testGeneratedFilePath)) {
             File::delete($testGeneratedFilePath);
         }
     }
 
-    public function testCommandShouldFailWithoutArgument(): void
+    public function test_command_should_fail_without_argument(): void
     {
         $this->expectException(RuntimeException::class);
         $this->artisan('printable:make');
@@ -27,48 +26,50 @@ class MakeCommandTest extends TestCase
     /**
      * @dataProvider invalidClassNameProvider
      */
-    public function testCommandShouldFailWithBadName(string $invalidClassName): void
+    public function test_command_should_fail_with_bad_name(string $invalidClassName): void
     {
+        $this->withoutMockingConsoleOutput();
+
+        $this->expectException(InvalidArgumentException::class);
         $this->artisan('printable:make', ['name' => $invalidClassName])
             ->assertFailed()
             ->expectsOutput("This class name {{$invalidClassName}} is not valid.")
         ;
     }
 
-    public function testCommandShouldSucceed(): void
+    public function test_command_should_succeed(): void
     {
-        $this->artisan('printable:make', ['name' => $this->uniquePrintableName])
+        $this->artisan('printable:make', ['name' => 'Foo'])
             ->assertSuccessful()
         ;
 
-        $filePath = base_path('app/Printables/' . $this->uniquePrintableName . '.php');
-        $this->assertDirectoryExists(base_path('app/Printables'));
-        $this->assertFileExists($filePath);
+        $this->assertDirectoryExists($this->printableClassesPath());
+        $this->assertFileExists($this->printableClassesPath('Foo.php'));
 
-        $content = File::get($filePath);
+        $content = File::get($this->printableClassesPath('Foo.php'));
 
         $this->assertStringContainsString("namespace App\Printables;", $content);
-        $this->assertStringContainsString("class {$this->uniquePrintableName} extends Printable implements ShouldQueue", $content);
+        $this->assertStringContainsString('class Foo extends Printable implements ShouldQueue', $content);
     }
 
-    public function testForceCommandShouldSucceed(): void
+    public function test_force_command_should_succeed(): void
     {
-        touch(base_path('app/Printables/' . $this->uniquePrintableName . '.php'));
+        touch($this->printableClassesPath('Foo.php'));
 
         $this->artisan('printable:make', [
-            'name' => $this->uniquePrintableName,
+            'name' => 'Foo',
             '--force' => true,
         ])
             ->assertSuccessful()
         ;
 
-        $filePath = base_path('app/Printables/' . $this->uniquePrintableName . '.php');
-        $this->assertDirectoryExists(base_path('app/Printables'));
-        $this->assertFileExists($filePath);
+        $this->assertDirectoryExists($this->printableClassesPath());
+        $this->assertFileExists($this->printableClassesPath('Foo.php'));
 
-        $content = File::get($filePath);
+        $content = File::get($this->printableClassesPath('Foo.php'));
+
         $this->assertStringContainsString("namespace App\Printables;", $content);
-        $this->assertStringContainsString("class {$this->uniquePrintableName} extends Printable implements ShouldQueue", $content);
+        $this->assertStringContainsString('class Foo extends Printable implements ShouldQueue', $content);
     }
 
     /*

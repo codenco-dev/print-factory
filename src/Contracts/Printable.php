@@ -16,12 +16,12 @@ abstract class Printable
 
     protected string $pdfFileName;
 
-    public function htmlContentIs(string $htmlContent): void
+    public function setHtmlContent(string $htmlContent): void
     {
         $this->htmlContent = $htmlContent;
     }
 
-    public function pdfFileNameIs(string $pdfFileName): void
+    public function setPdfFileName(string $pdfFileName): void
     {
         $this->pdfFileName = $pdfFileName;
     }

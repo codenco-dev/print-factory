@@ -1,13 +1,13 @@
 <?php
 
-namespace [namespace];
+namespace {{namespace}};
 
 use CodencoDev\PrintFactory\Contracts\Printable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
 
-class [class] extends Printable implements ShouldQueue
+class {{class}} extends Printable implements ShouldQueue
 {
     use Queueable;
     use SerializesModels;
@@ -19,8 +19,8 @@ class [class] extends Printable implements ShouldQueue
         $sampleData = [
             'hello' => 'world',
         ];
-        $this->htmlContentIs(view($this->view, $sampleData)->render());
-        $this->pdfFileNameIs("hello_world.pdf");
+        $this->setHtmlContent(view($this->view, $sampleData)->render());
+        $this->setPdfFileName("hello_world.pdf");
     }
 
     public static function for(...$params)

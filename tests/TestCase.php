@@ -4,9 +4,9 @@ namespace CodencoDev\PrintFactory\Tests;
 
 use CodencoDev\PrintFactory\Facades\PrintFactory;
 use CodencoDev\PrintFactory\PrintFactoryServiceProvider;
-use Orchestra\Testbench\TestCase as TestbenchTestCase;
+use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
-class TestCase extends TestbenchTestCase
+class TestCase extends OrchestraTestCase
 {
     protected function getPackageProviders($app)
     {
@@ -20,5 +20,10 @@ class TestCase extends TestbenchTestCase
         return [
             'PrintFactory' => PrintFactory::class,
         ];
+    }
+
+    protected function printableClassesPath(string $path = ''): string
+    {
+        return app_path('Printables' . ($path ? DIRECTORY_SEPARATOR . $path : ''));
     }
 }

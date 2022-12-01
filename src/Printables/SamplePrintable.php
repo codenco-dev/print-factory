@@ -2,7 +2,7 @@
 
 namespace CodencoDev\PrintFactory\Printables;
 
-use CodencoDev\PrintFactory\Contracts\Printable\Printable;
+use CodencoDev\PrintFactory\Contracts\Printable;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\SerializesModels;
@@ -23,8 +23,8 @@ class SamplePrintable extends Printable implements ShouldQueue
         $sampleData = [
             'hello' => 'world',
         ];
-        $this->htmlContentIs(view($this->view, $sampleData)->render());
-        $this->pdfFileNameIs("hello_world.pdf");
+        $this->setHtmlContent(view($this->view, $sampleData)->render());
+        $this->setPdfFileName('hello_world.pdf');
     }
 
     public static function for(...$params)
